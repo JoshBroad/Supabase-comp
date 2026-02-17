@@ -1,0 +1,11 @@
+{
+  "name": "vibe-architect-backend",
+  "private": true,
+  "devDependencies": {
+    "supabase": "^2.39.2"
+  },
+  "scripts": {
+    "supabase": "supabase",
+    "supabase:version": "supabase --version"
+  }
+}
