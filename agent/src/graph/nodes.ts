@@ -17,15 +17,37 @@ function extractJson(text: string): string {
   // Strip markdown fences if present
   const fenced = text.match(/```(?:json)?\s*([\s\S]*?)```/);
   if (fenced) return fenced[1].trim();
+  
   // Find first { or [
   const start = text.search(/[{\[]/);
   if (start === -1) return text;
+  
+  // Find last } or ]
+  let end = -1;
+  for (let i = text.length - 1; i >= start; i--) {
+    if (text[i] === "}" || text[i] === "]") {
+      end = i;
+      break;
+    }
+  }
+  
+  if (end !== -1) {
+    return text.substring(start, end + 1);
+  }
+  
   return text.substring(start);
 }
 
 function extractSql(text: string): string {
   const fenced = text.match(/```(?:sql)?\s*([\s\S]*?)```/);
   if (fenced) return fenced[1].trim();
+  
+  // If no fences, try to find start of SQL
+  const sqlStart = text.search(/(CREATE\s+TABLE|INSERT\s+INTO|DROP\s+TABLE|ALTER\s+TABLE)/i);
+  if (sqlStart !== -1) {
+    return text.substring(sqlStart);
+  }
+  
   return text.trim();
 }
 
@@ -314,6 +336,10 @@ export async function executeSql(
         const { error } = await supabase.rpc("exec_sql", {
           query: stmt + ";",
         });
+        
+        // Add delay to avoid rate limiting
+        await new Promise((resolve) => setTimeout(resolve, 200));
+
         if (error) {
           console.error(`SQL error: ${error.message}\nStatement: ${stmt}`);
           await emitEvent(sessionId, "sql_error", `Schema error: ${error.message}`, {
@@ -338,6 +364,10 @@ export async function executeSql(
         const { error } = await supabase.rpc("exec_sql", {
           query: stmt + ";",
         });
+        
+        // Add delay to avoid rate limiting
+        await new Promise((resolve) => setTimeout(resolve, 200));
+        
         if (error) {
           console.error(`Insert error: ${error.message}`);
         } else {

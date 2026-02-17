@@ -1,36 +1,55 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Data Lake Frontend 🎨
 
-## Getting Started
+The user interface for the **Data Lake to SQL** platform. Built with **Next.js 14**, it provides a sleek, real-time experience for uploading data and visualizing the database creation process.
 
-First, run the development server:
+## ✨ Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+-   **📂 File Upload Zone**: Drag-and-drop interface for `CSV`, `JSON`, `XML`, and `TXT` files.
+-   **📊 Interactive Schema Visualization**:
+    -   **2D Graph**: Powered by **React Flow**, showing tables and relationships clearly.
+    -   **3D Graph**: Powered by **React Three Fiber**, offering an immersive view of complex schemas.
+-   **⏱️ Live Build Timeline**: Tracks the AI agent's progress in real-time via **Supabase Realtime**.
+-   **⚠️ Data Drift Alerts**: Notifications when incoming data violates the established schema.
+-   **验证 Validation Panel**: Detailed breakdown of data quality and consistency checks.
+
+## 🛠️ Tech Stack
+
+-   **Framework**: Next.js 14 (App Router)
+-   **Styling**: Tailwind CSS + Shadcn UI
+-   **State Management**: React Context + Supabase Realtime
+-   **Visualization**: React Flow (2D), Three.js / React Three Fiber (3D)
+-   **Icons**: Lucide React
+
+## 🚀 Getting Started
+
+### 1. Configure Environment
+
+Create a `.env.local` file in the root of this directory:
+
+```env
+# Supabase Configuration (Public Key is safe for client-side)
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+# Backend API (Points to the local Agent)
+NEXT_PUBLIC_BACKEND_BASE_URL=http://localhost:3001
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Run Locally
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+# Install dependencies
+npm install
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Start the development server
+npm run dev
+```
 
-## Learn More
+Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-To learn more about Next.js, take a look at the following resources:
+## 🧩 Project Structure
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+-   `app/`: Next.js App Router pages and layouts.
+-   `components/`: Reusable UI components (UploadZone, SchemaGraph, etc.).
+-   `lib/`: Utility functions and API clients (`supabaseClient.ts`, `api.ts`).
+-   `public/`: Static assets and sample data files.

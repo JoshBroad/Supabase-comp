@@ -1,14 +1,10 @@
 import type { ParsedFile, InferredEntity, ValidationIssue } from "../graph/state.js";
 
 function fileSummary(f: ParsedFile): string {
-  return `
-File: ${f.filename} (${f.format}, ${f.rowCount} rows)
-Headers: ${f.headers.join(", ")}
-Sample rows (first 3):
-${JSON.stringify(f.sampleRows.slice(0, 3), null, 2)}
-Raw preview:
-${f.rawPreview}
-`;
+  // Minimized for token efficiency
+  return `File: ${f.filename}
+Headers: ${f.headers.join(",")}
+Sample: ${JSON.stringify(f.sampleRows.slice(0, 3))}`;
 }
 
 export function inferEntitiesPrompt(files: ParsedFile[]): string {
@@ -47,7 +43,7 @@ export function generateSqlPrompt(entities: InferredEntity[]): string {
   return `You are a PostgreSQL expert. Generate CREATE TABLE statements for these entities.
 
 ENTITIES:
-${JSON.stringify(entities, null, 2)}
+${JSON.stringify(entities)}
 
 REQUIREMENTS:
 1. Use PostgreSQL syntax.
@@ -73,7 +69,7 @@ SQL SCHEMA:
 ${sql}
 
 ENTITY DEFINITIONS:
-${JSON.stringify(entities, null, 2)}
+${JSON.stringify(entities)}
 
 SOURCE FILE SUMMARIES:
 ${files.map((f) => `- ${f.filename}: ${f.rowCount} rows, headers: ${f.headers.join(", ")}`).join("\n")}
@@ -103,10 +99,10 @@ export function correctSchemaPrompt(
   return `You are a data architect. Fix these issues in the entity definitions.
 
 CURRENT ENTITIES:
-${JSON.stringify(entities, null, 2)}
+${JSON.stringify(entities)}
 
 ISSUES TO FIX:
-${JSON.stringify(issues, null, 2)}
+${JSON.stringify(issues)}
 
 Fix all issues and return the corrected entities. Respond with ONLY valid JSON (no markdown, no explanation):
 {
@@ -135,14 +131,12 @@ export function generateInsertsPrompt(
 SQL SCHEMA:
 ${sql}
 
-ENTITIES (for mapping context):
-${JSON.stringify(entities, null, 2)}
+ENTITIES:
+${JSON.stringify(entities)}
 
-SOURCE DATA (sample rows from each file):
-${files.map((f) => `
---- ${f.filename} (${f.rowCount} total rows, showing first 5) ---
-${JSON.stringify(f.sampleRows.slice(0, 5), null, 2)}
-`).join("\n")}
+SOURCE DATA:
+${files.map((f) => `--- ${f.filename} ---
+${JSON.stringify(f.sampleRows.slice(0, 5))}`).join("\n")}
 
 REQUIREMENTS:
 1. Generate INSERT statements that map source data to the normalized schema.

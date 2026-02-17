@@ -27,7 +27,7 @@ export function PresenceBar({ presence, currentFocus }: PresenceBarProps) {
               <span className="absolute bottom-0 right-0 block h-2.5 w-2.5 rounded-full bg-emerald-500 ring-2 ring-background" />
             </div>
             <div className="flex flex-col">
-              <span className="text-sm font-medium leading-none">Vibe Architect</span>
+              <span className="text-sm font-medium leading-none">Data Lake Agent</span>
               <span className="text-xs text-muted-foreground animate-pulse">
                 {architect.step || "Thinking..."}
               </span>

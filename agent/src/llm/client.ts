@@ -10,44 +10,61 @@ class OpenRouterLLM {
   }
 
   async invoke(prompt: string): Promise<{ content: string }> {
-    try {
-      const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${this.apiKey}`,
-          "HTTP-Referer": "https://trae.ai",
-          "X-Title": "Vibe Architect Agent",
-        },
-        body: JSON.stringify({
-          model: this.model,
-          messages: [
-            {
-              role: "user",
-              content: prompt,
-            },
-          ],
-          temperature: 0.1, // Low temperature for more deterministic JSON
-        }),
-      });
+    const maxRetries = 5;
+    let attempt = 0;
+    
+    while (attempt < maxRetries) {
+      try {
+        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${this.apiKey}`,
+            "HTTP-Referer": "https://trae.ai",
+            "X-Title": "Data Lake Agent",
+          },
+          body: JSON.stringify({
+            model: this.model,
+            messages: [
+              {
+                role: "user",
+                content: prompt,
+              },
+            ],
+            temperature: 0.1, // Low temperature for more deterministic JSON
+          }),
+        });
 
-      if (!response.ok) {
-        const text = await response.text().catch(() => "");
-        throw new Error(`OpenRouter error: ${response.status} ${text}`);
+        if (!response.ok) {
+          if (response.status === 429 || response.status >= 500) {
+            const text = await response.text().catch(() => "");
+            console.warn(`LLM request failed (attempt ${attempt + 1}/${maxRetries}): ${response.status} ${text}`);
+            attempt++;
+            const delay = Math.pow(2, attempt) * 1000; // Exponential backoff: 2s, 4s, 8s, 16s, 32s
+            await new Promise((resolve) => setTimeout(resolve, delay));
+            continue;
+          }
+          const text = await response.text().catch(() => "");
+          throw new Error(`OpenRouter error: ${response.status} ${text}`);
+        }
+
+        const data: any = await response.json();
+        const choice = data.choices?.[0];
+        const content =
+          typeof choice?.message?.content === "string"
+            ? choice.message.content
+            : "";
+
+        return { content };
+      } catch (error) {
+        console.error("LLM invoke error:", error);
+        if (attempt === maxRetries - 1) throw error;
+        attempt++;
+        const delay = Math.pow(2, attempt) * 1000;
+        await new Promise((resolve) => setTimeout(resolve, delay));
       }
-
-      const data: any = await response.json();
-      const choice = data.choices?.[0];
-      const content =
-        typeof choice?.message?.content === "string"
-          ? choice.message.content
-          : "";
-
-      return { content };
-    } catch (error) {
-      console.error("LLM invoke error:", error);
-      throw error;
     }
+    throw new Error("Max retries exceeded");
   }
 }
 
@@ -62,8 +79,8 @@ export function getLLM(): OpenRouterLLM {
   }
 
   // Use a capable model for schema inference. 
-  // "meta-llama/llama-3.3-70b-instruct:free" is cost-effective and capable.
-  llm = new OpenRouterLLM(apiKey, "meta-llama/llama-3.3-70b-instruct:free");
+  // User requested GPT OSS
+  llm = new OpenRouterLLM(apiKey, "openai/gpt-oss-120b:free");
 
   return llm;
 }
