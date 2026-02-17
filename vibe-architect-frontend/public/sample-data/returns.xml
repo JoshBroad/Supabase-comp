@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<returns>
+  <return>
+    <returnId>RET-001</returnId>
+    <orderId>ORD-003</orderId>
+    <productSku>SKU-MS004</productSku>
+    <reason>Defective - drawer mechanism broken on arrival</reason>
+    <returnDate>2024-04-02</returnDate>
+    <refundAmount>45.00</refundAmount>
+    <status>refunded</status>
+  </return>
+  <return>
+    <returnId>RET-002</returnId>
+    <orderId>ORD-005</orderId>
+    <productSku>SKU-WC006</productSku>
+    <reason>Wrong item received</reason>
+    <returnDate>04/08/2024</returnDate>
+    <refundAmount>79.99</refundAmount>
+    <status>refunded</status>
+  </return>
+  <return>
+    <returnId>RET-003</returnId>
+    <orderId>ORD-010</orderId>
+    <productSku>SKU-UH002</productSku>
+    <reason>One port not working</reason>
+    <returnDate>2024-05-10</returnDate>
+    <refundAmount>49.99</refundAmount>
+    <status>refunded</status>
+  </return>
+  <return>
+    <returnId>RET-004</returnId>
+    <orderId>ORD-012</orderId>
+    <productName>Ring Light</productName>
+    <reason>Tripod arrived broken</reason>
+    <returnDate>2024-05-28</returnDate>
+    <refundAmount>34.99</refundAmount>
+    <status>refunded</status>
+  </return>
+  <return>
+    <returnId>RET-005</returnId>
+    <orderId>ORD-016</orderId>
+    <productSku>SKU-FR018</productSku>
+    <reason>Smaller than expected, doesn't fit under desk</reason>
+    <returnDate>06/25/2024</returnDate>
+    <refundAmount>39.99</refundAmount>
+    <status>refunded</status>
+  </return>
+  <return>
+    <returnId>RET-006</returnId>
+    <orderId>ORD-021</orderId>
+    <productSku>SKU-HS021</productSku>
+    <reason>Changed mind</reason>
+    <returnDate>2024-08-05</returnDate>
+    <refundAmount>19.99</refundAmount>
+    <status>refunded</status>
+  </return>
+  <return>
+    <returnId>RET-007</returnId>
+    <orderId>ORD-024</orderId>
+    <productName>Desk Lamp LED</productName>
+    <reason>USB port stopped working after 2 weeks</reason>
+    <returnDate>2024-09-01</returnDate>
+    <refundAmount>42.99</refundAmount>
+    <status>refunded</status>
+  </return>
+  <return>
+    <returnId>RET-008</returnId>
+    <orderId>ORD-026</orderId>
+    <productSku>SKU-CO008</productSku>
+    <reason>Poor adhesive, falls off desk surface</reason>
+    <returnDate>09/10/2024</returnDate>
+    <refundAmount>25.98</refundAmount>
+    <status>partial_refund</status>
+  </return>
+  <return>
+    <returnId>RET-009</returnId>
+    <orderId>ORD-030</orderId>
+    <productName>Ergonomic Chair Cushion</productName>
+    <reason>Gel layer leaked after 1 month</reason>
+    <returnDate>2024-11-05</returnDate>
+    <refundAmount>44.99</refundAmount>
+    <status>replacement_sent</status>
+  </return>
+  <return>
+    <returnId>RET-010</returnId>
+    <orderId>ORD-034</orderId>
+    <productSku>SKU-KCS025</productSku>
+    <reason>Color doesn't match product photos</reason>
+    <returnDate>11/12/2024</returnDate>
+    <refundAmount>29.99</refundAmount>
+    <status>refunded</status>
+  </return>
+  <return>
+    <returnId>RET-011</returnId>
+    <orderId>ORD-038</orderId>
+    <productSku>SKU-SCK020</productSku>
+    <reason>Spray bottle leaked during shipping</reason>
+    <returnDate>2024-12-05</returnDate>
+    <refundAmount>14.99</refundAmount>
+    <status>replacement_sent</status>
+  </return>
+  <return>
+    <returnId>RET-012</returnId>
+    <orderId>44</orderId>
+    <productSku>SKU-HDMI022</productSku>
+    <reason>Cable too short for my setup, thought it was longer</reason>
+    <returnDate>01/16/2025</returnDate>
+    <refundAmount>9.99</refundAmount>
+    <status>refunded</status>
+  </return>
+  <return>
+    <returnId>RET-013</returnId>
+    <orderId>ORD-046</orderId>
+    <productSku>SKU-REP027</productSku>
+    <reason>Doesn't fit my headphone model</reason>
+    <returnDate>2025-02-01</returnDate>
+    <refundAmount>18.99</refundAmount>
+    <status>refunded</status>
+  </return>
+  <return>
+    <returnId>RET-014</returnId>
+    <orderId>ORD-050</orderId>
+    <productName>Ring Light</productName>
+    <reason>Flickering at highest brightness</reason>
+    <returnDate>2025-03-02</returnDate>
+    <refundAmount>34.99</refundAmount>
+    <status>replacement_sent</status>
+  </return>
+  <return>
+    <returnId>RET-015</returnId>
+    <orderId>ORD-054</orderId>
+    <productName>Laptop Sleeve 15"</productName>
+    <reason>Zipper broke on first use</reason>
+    <returnDate>03/30/2025</returnDate>
+    <refundAmount>35.99</refundAmount>
+    <status>refunded</status>
+  </return>
+  <return>
+    <returnId>RET-016</returnId>
+    <orderId>ORD-056</orderId>
+    <productSku>SKU-PH024</productSku>
+    <reason>Arrived cracked</reason>
+    <returnDate>2025-04-10</returnDate>
+    <refundAmount>8.99</refundAmount>
+    <status>refunded</status>
+  </return>
+  <return>
+    <returnId>RET-017</returnId>
+    <orderId>ORD-060</orderId>
+    <productSku>SKU-FR018</productSku>
+    <reason>Massage bumps too aggressive, uncomfortable</reason>
+    <returnDate>05/10/2025</returnDate>
+    <refundAmount>39.99</refundAmount>
+    <status>refunded</status>
+  </return>
+  <return>
+    <returnId>RET-018</returnId>
+    <orderId>ORD-066</orderId>
+    <productSku>SKU-MS004</productSku>
+    <reason>Wobbly on desk, doesn't feel stable</reason>
+    <returnDate>2025-06-20</returnDate>
+    <refundAmount>45.00</refundAmount>
+    <status>refunded</status>
+  </return>
+  <return>
+    <returnId>RET-019</returnId>
+    <orderId>ORD-070</orderId>
+    <productSku>SKU-CO008</productSku>
+    <reason>Received wrong quantity (3 instead of 4)</reason>
+    <returnDate>07/15/2025</returnDate>
+    <refundAmount>12.99</refundAmount>
+    <status>partial_refund</status>
+  </return>
+  <return>
+    <returnId>RET-020</returnId>
+    <orderId>ORD-073</orderId>
+    <productSku>SKU-HDMI022</productSku>
+    <reason>No video signal, cable appears defective</reason>
+    <returnDate>2025-08-08</returnDate>
+    <refundAmount>29.97</refundAmount>
+    <status>refunded</status>
+  </return>
+</returns>

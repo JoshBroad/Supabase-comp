@@ -1,4 +1,4 @@
-project_id = ""
+project_id = "data-lake-to-sql"
 
 [api]
 enabled = true
@@ -14,6 +14,3 @@ port = 54323
 [inbucket]
 enabled = true
 port = 54324
-
-[functions]
-enabled = true

@@ -1,0 +1,61 @@
+review_id,product_name,reviewer_email,rating,review_text,date_posted
+REV-001,Wireless Mouse,alice.j@email.com,5,Love this mouse! Super comfortable and the silent clicks are a game changer.,2024-04-01
+REV-002,USB-C Hub,alice.j@email.com,4,Works great but gets a bit warm after extended use.,04/02/2024
+REV-003,Mechanical Keyboard,carol.w@email.com,5,The Cherry MX Blues are perfect. Great build quality.,2024-04-05
+REV-004,Monitor Stand,eva.m@email.com,3,Decent stand but the drawer is smaller than expected.,04/10/2024
+REV-005,Webcam HD,grace.lee@email.com,4,Good picture quality for video calls. Auto-focus works well.,2024-04-20
+REV-006,Desk Lamp LED,david.b@email.com,5,The USB charging port is super convenient. Love the brightness levels.,2024-04-22
+REV-007,Cable Organizer,david.b@email.com,4,Simple but effective. Wish they came in more colors.,04/25/2024
+REV-008,Standing Desk Mat,jack.t@email.com,5,My feet feel so much better at the end of the day. Highly recommend!,2024-05-01
+REV-009,Noise Cancelling Headphones,henry.w@email.com,5,Incredible noise cancellation. Battery lasts forever.,2024-05-05
+REV-010,Wireless Mouse,bob.smith@email.com,4,Good mouse for the price. Battery life could be longer.,05/10/2024
+REV-011,Monitor Arm,alice.j@email.com,5,So much more desk space now! Easy to install.,2024-05-20
+REV-012,Ring Light,tina.y@email.com,4,Great for video calls. Tripod is a bit wobbly.,05/25/2024
+REV-013,Laptop Stand Adjustable,iris.a@email.com,5,Solid aluminum build. The height settings are perfect.,2024-06-01
+REV-014,Wireless Charger Pad,noah.c@email.com,3,Charges slowly compared to wired. Works fine otherwise.,06/05/2024
+REV-015,Desk Organizer Wood,yara.s@email.com,5,Beautiful bamboo finish. Keeps my desk tidy.,2024-06-15
+REV-016,Ergonomic Chair Cushion,rita.h@email.com,4,Comfortable but the cooling gel doesn't stay cool very long.,2024-06-25
+REV-017,Footrest,rita.h@email.com,5,Great footrest! The massage surface is a nice touch.,06/30/2024
+REV-018,Wireless Mouse,victor.w@email.com,5,Bought two for home and office. Best mouse I've owned.,2024-07-05
+REV-019,Mechanical Keyboard,leo.w@email.com,4,Great keyboard but the RGB software needs work.,07/10/2024
+REV-020,USB-C Hub,olivia.l@email.com,4,All ports work reliably. Good build quality.,2024-07-15
+REV-021,Power Strip Smart,dan.d@email.com,3,WiFi connection drops occasionally. Works fine otherwise.,2024-07-20
+REV-022,Monitor Stand,karen.j@email.com,4,Sturdy and looks nice. Assembly was straightforward.,07/25/2024
+REV-023,Screen Cleaning Kit,iris.a@email.com,5,The spray solution works amazing. No streaks!,2024-08-01
+REV-024,Headphone Stand,quinn.w@email.com,4,Sleek design. Cable hook is a nice detail.,08/05/2024
+REV-025,Noise Cancelling Headphones,nora.m@email.com,5,Best headphones I've ever owned. Period.,2024-08-10
+REV-026,Webcam HD,tina.y@email.com,4,Good webcam for the price. Microphone is decent.,2024-08-15
+REV-027,Laptop Sleeve,wendy.l@email.com,5,Fits my 15 inch MacBook perfectly. Water resistant too.,08/20/2024
+REV-028,HDMI Cable 6ft,ben.b@email.com,5,Works perfectly for 4K. No issues whatsoever.,2024-08-25
+REV-029,Desk Lamp LED,ben.b@email.com,4,Good lamp but the touch controls are finicky sometimes.,08/30/2024
+REV-030,Cable Organizer,gina.g@email.com,3,They work but fall off smooth surfaces easily.,2024-09-05
+REV-031,Standing Desk Mat,gina.g@email.com,4,Comfortable mat. A bit heavy to move around.,09/10/2024
+REV-032,Phone Stand,sam.a@email.com,5,Perfect angle for video calls. Solid aluminum.,2024-09-15
+REV-033,Pen Holder,mia.h@email.com,4,Cute design. Could be a tad bigger.,09/20/2024
+REV-034,Keycap Set,finn.f@email.com,5,Beautiful colors and great feel. PBT quality is noticeably better.,2024-09-25
+REV-035,Mouse Pad XL,finn.f@email.com,4,Huge pad covers my whole desk. Stitched edges hold up well.,10/01/2024
+REV-036,Wireless Charger Pad,xander.h@email.com,4,Fast charging works well with my Samsung phone.,2024-10-05
+REV-037,Mechanical Keyboard,hank.g@email.com,5,Third mechanical keyboard and by far the best one.,10/10/2024
+REV-038,Replacement Ear Pads,henry.w@email.com,4,Good replacement pads. Fit could be slightly tighter.,2024-10-15
+REV-039,Footrest,paul.r@email.com,4,Good height adjustability. Massage bumps are a nice bonus.,10/20/2024
+REV-040,Monitor Arm,zach.g@email.com,5,Rock solid. My ultrawide doesn't move at all.,2024-10-25
+REV-041,Desk Organizer Wood,amy.a@email.com,4,Looks great on my desk. The drawer is handy for small items.,2024-11-01
+REV-042,Webcam HD,lana.k@email.com,3,Decent webcam but auto-focus hunts in low light.,11/05/2024
+REV-043,USB-C Hub,kyle.j@email.com,4,Works with my MacBook Pro no issues. SD card reader is fast.,2024-11-10
+REV-044,Noise Cancelling Headphones,wes.u@email.com,5,The sound quality blew me away. ANC is top notch.,11/15/2024
+REV-045,Ergonomic Chair Cushion,yuri.w@email.com,4,Much more comfortable than sitting on my office chair alone.,2024-11-20
+REV-046,Power Strip Smart,quinn.w@email.com,4,Works well with Alexa. USB ports are a nice bonus.,2024-11-25
+REV-047,Wireless Mouse,ella.e@email.com,4,Good everyday mouse. Wish it had more programmable buttons.,11/30/2024
+REV-048,Laptop Stand Adjustable,amy.a@email.com,5,Excellent build quality. My laptop runs cooler on this.,2024-12-05
+REV-049,Ring Light,pia.o@email.com,5,Perfect for my streaming setup. Great brightness.,12/10/2024
+REV-050,Headphone Stand,jade.i@email.com,3,Looks nice but tips over if headphones are heavy.,2024-12-15
+REV-051,Standing Desk Mat,tom.r@email.com,5,Finally my back doesn't hurt after standing all day.,12/20/2024
+REV-052,HDMI Cable 6ft,oscar.n@email.com,4,Good cable. Packaging could be better.,2024-12-25
+REV-053,Desk Lamp LED,una.s@email.com,5,The best desk lamp I've owned. USB port is super useful.,2025-01-05
+REV-054,Screen Cleaning Kit,vic.t@email.com,4,Good kit. Cloth could be larger.,01/10/2025
+REV-055,Cable Organizer,mike.l@email.com,4,Works great for USB cables. Not strong enough for thicker cables.,2025-01-15
+REV-056,Monitor Stand,sue.q@email.com,5,Love the phone holder feature. Very sturdy.,01/20/2025
+REV-057,Mechanical Keyboard,ivy.h@email.com,4,Great switches but keycaps feel a bit cheap. Replaced with SKU-KCS025.,2025-01-25
+REV-058,Wrist Rest,leo.w@email.com,5,Memory foam is perfect firmness. No wrist pain anymore.,2025-02-01
+REV-059,Wireless Charger Pad,nora.m@email.com,4,Works well. LED indicator is a bit bright at night.,02/05/2025
+REV-060,Mouse Pad XL,ella.e@email.com,5,Huge and comfortable. Stitched edges are holding up great after months.,2025-02-10

@@ -2,8 +2,10 @@ import { handleCors, corsHeaders } from "../_shared/cors.ts";
 import { getSupabaseAdminClient } from "../_shared/supabase.ts";
 
 type CreateSessionRequest = {
-  vibeText: string;
-  template: "marketplace" | "saas" | string;
+  fileKeys?: string[];
+  // Legacy support
+  vibeText?: string;
+  template?: string;
   options?: Record<string, unknown>;
 };
 
@@ -17,33 +19,34 @@ Deno.serve(async (req) => {
 
     if (req.method === "POST") {
       const body = (await req.json()) as CreateSessionRequest;
-      if (!body?.vibeText || body.vibeText.trim().length < 10) {
-        return Response.json({ error: "vibeText too short" }, { status: 400, headers: corsHeaders });
+
+      // Data lake mode: fileKeys provided
+      if (body?.fileKeys && body.fileKeys.length > 0) {
+        const { data, error } = await supabase.rpc("session_create", {
+          p_vibe_text: body.vibeText ?? "",
+          p_template: body.template ?? "data_lake",
+          p_options: body.options ?? {},
+          p_file_keys: body.fileKeys,
+        });
+
+        if (error) return Response.json({ error: error.message }, { status: 500, headers: corsHeaders });
+
+        return Response.json({ sessionId: data }, { headers: corsHeaders });
       }
-      if (!body?.template) {
-        return Response.json({ error: "template required" }, { status: 400, headers: corsHeaders });
+
+      // Legacy vibe mode
+      if (!body?.vibeText || body.vibeText.trim().length < 10) {
+        return Response.json({ error: "fileKeys[] or vibeText required" }, { status: 400, headers: corsHeaders });
       }
 
       const { data, error } = await supabase.rpc("session_create", {
         p_vibe_text: body.vibeText,
-        p_template: body.template,
+        p_template: body.template ?? "data_lake",
         p_options: body.options ?? {},
+        p_file_keys: [],
       });
 
       if (error) return Response.json({ error: error.message }, { status: 500, headers: corsHeaders });
-
-      // Trigger orchestration asynchronously
-      const orchestratePromise = supabase.functions.invoke("orchestrate", {
-        body: { sessionId: data },
-      });
-
-      // deno-lint-ignore no-explicit-any
-      const edgeRuntime = (globalThis as any).EdgeRuntime;
-      if (edgeRuntime) {
-        edgeRuntime.waitUntil(orchestratePromise);
-      } else {
-        orchestratePromise.catch((err) => console.error("Orchestrate trigger failed:", err));
-      }
 
       return Response.json({ sessionId: data }, { headers: corsHeaders });
     }

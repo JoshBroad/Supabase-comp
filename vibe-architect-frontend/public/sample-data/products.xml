@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalog>
+  <product>
+    <sku>SKU-WM001</sku>
+    <name>Wireless Mouse</name>
+    <description>Ergonomic wireless mouse with 2.4GHz connectivity and silent clicks</description>
+    <price>29.99</price>
+    <category>Computer Peripherals</category>
+    <weight>0.15</weight>
+  </product>
+  <product>
+    <sku>SKU-UH002</sku>
+    <name>USB-C Hub</name>
+    <description>7-in-1 USB-C hub with HDMI, USB 3.0, SD card reader</description>
+    <price>49.99</price>
+    <category>Computer Accessories</category>
+    <weight>0.12</weight>
+  </product>
+  <product>
+    <sku>SKU-MK003</sku>
+    <name>Mechanical Keyboard</name>
+    <description>Full-size mechanical keyboard with Cherry MX Blue switches and RGB backlight</description>
+    <price>129.99</price>
+    <category>Computer Peripherals</category>
+    <weight>1.2</weight>
+  </product>
+  <product>
+    <sku>SKU-MS004</sku>
+    <name>Monitor Stand</name>
+    <description>Adjustable monitor stand with storage drawer and phone holder</description>
+    <price>45.00</price>
+    <category>Desk Accessories</category>
+    <weight>2.5</weight>
+  </product>
+  <product>
+    <name>Laptop Sleeve 15"</name>
+    <description>Water-resistant neoprene laptop sleeve for 15 inch laptops</description>
+    <price>35.99</price>
+    <category>Bags &amp; Cases</category>
+    <weight>0.3</weight>
+  </product>
+  <product>
+    <sku>SKU-WC006</sku>
+    <name>Webcam HD</name>
+    <description>1080p HD webcam with built-in microphone and auto-focus</description>
+    <price>79.99</price>
+    <category>Computer Peripherals</category>
+    <weight>0.18</weight>
+  </product>
+  <product>
+    <sku>SKU-DL007</sku>
+    <name>Desk Lamp LED</name>
+    <description>Adjustable LED desk lamp with 5 brightness levels and USB charging port</description>
+    <price>42.99</price>
+    <category>Lighting</category>
+    <weight>0.8</weight>
+  </product>
+  <product>
+    <sku>SKU-CO008</sku>
+    <name>Cable Organizer</name>
+    <description>Silicone cable management clips, pack of 5</description>
+    <price>12.99</price>
+    <category>desk accessories</category>
+    <weight>0.05</weight>
+  </product>
+  <product>
+    <sku>SKU-SDM009</sku>
+    <name>Standing Desk Mat</name>
+    <description>Anti-fatigue standing desk mat with beveled edges</description>
+    <price>59.99</price>
+    <category>Ergonomics</category>
+    <weight>3.0</weight>
+  </product>
+  <product>
+    <sku>SKU-NCH010</sku>
+    <name>Noise Cancelling Headphones</name>
+    <description>Over-ear wireless headphones with active noise cancellation, 30hr battery</description>
+    <price>199.99</price>
+    <category>Audio</category>
+    <weight>0.35</weight>
+  </product>
+  <product>
+    <name>Wrist Rest</name>
+    <description>Memory foam keyboard wrist rest with anti-slip base</description>
+    <price>24.99</price>
+    <category>Ergonomics</category>
+    <weight>0.4</weight>
+  </product>
+  <product>
+    <sku>SKU-MA012</sku>
+    <name>Monitor Arm</name>
+    <description>Gas spring single monitor arm, supports up to 32 inch displays</description>
+    <price>89.99</price>
+    <category>Desk Accessories</category>
+    <weight>4.5</weight>
+  </product>
+  <product>
+    <sku>SKU-RL013</sku>
+    <name>Ring Light</name>
+    <description>10-inch ring light with tripod and phone holder, 3 color modes</description>
+    <price>34.99</price>
+    <category>Lighting</category>
+    <weight>0.6</weight>
+  </product>
+  <product>
+    <sku>SKU-LSA014</sku>
+    <name>Laptop Stand Adjustable</name>
+    <description>Aluminum adjustable laptop stand with ventilation, 6 height settings</description>
+    <price>69.99</price>
+    <category>Desk Accessories</category>
+    <weight>1.0</weight>
+  </product>
+  <product>
+    <sku>SKU-WCP015</sku>
+    <name>Wireless Charger Pad</name>
+    <description>15W fast wireless charging pad, Qi compatible</description>
+    <price>25.99</price>
+    <category>chargers</category>
+    <weight>0.1</weight>
+  </product>
+  <product>
+    <sku>SKU-DOW016</sku>
+    <name>Desk Organizer Wood</name>
+    <description>Bamboo desk organizer with 6 compartments and drawer</description>
+    <price>55.99</price>
+    <category>Desk Accessories</category>
+    <weight>1.8</weight>
+  </product>
+  <product>
+    <name>Ergonomic Chair Cushion</name>
+    <description>Memory foam seat cushion with cooling gel layer</description>
+    <price>44.99</price>
+    <category>Ergonomics</category>
+    <weight>1.2</weight>
+  </product>
+  <product>
+    <sku>SKU-FR018</sku>
+    <name>Footrest</name>
+    <description>Adjustable under-desk footrest with massage surface</description>
+    <price>39.99</price>
+    <category>Ergonomics</category>
+    <weight>2.0</weight>
+  </product>
+  <product>
+    <sku>SKU-PSS019</sku>
+    <name>Power Strip Smart</name>
+    <description>WiFi smart power strip with 4 outlets and 3 USB ports</description>
+    <price>36.99</price>
+    <category>Electronics</category>
+    <weight>0.5</weight>
+  </product>
+  <product>
+    <sku>SKU-SCK020</sku>
+    <name>Screen Cleaning Kit</name>
+    <description>Microfiber cloth and spray solution for screens and lenses</description>
+    <price>14.99</price>
+    <category>Cleaning</category>
+    <weight>0.2</weight>
+  </product>
+  <product>
+    <sku>SKU-HS021</sku>
+    <name>Headphone Stand</name>
+    <description>Aluminum headphone stand with cable hook</description>
+    <price>19.99</price>
+    <category>Audio</category>
+    <weight>0.4</weight>
+  </product>
+  <product>
+    <sku>SKU-HDMI022</sku>
+    <name>HDMI Cable 6ft</name>
+    <description>High-speed HDMI 2.1 cable, 6 feet, supports 4K@120Hz</description>
+    <price>9.99</price>
+    <category>Cables</category>
+    <weight>0.08</weight>
+  </product>
+  <product>
+    <sku>SKU-PS023</sku>
+    <name>Phone Stand</name>
+    <description>Adjustable aluminum phone stand for desk</description>
+    <price>15.99</price>
+    <category>desk accessories</category>
+    <weight>0.15</weight>
+  </product>
+  <product>
+    <sku>SKU-PH024</sku>
+    <name>Pen Holder</name>
+    <description>Ceramic pen holder with minimalist design</description>
+    <price>8.99</price>
+    <category>Desk Accessories</category>
+    <weight>0.3</weight>
+  </product>
+  <product>
+    <sku>SKU-KCS025</sku>
+    <name>Keycap Set</name>
+    <description>PBT double-shot keycap set, 104 keys, cherry profile</description>
+    <price>29.99</price>
+    <category>Computer Peripherals</category>
+    <weight>0.25</weight>
+  </product>
+  <product>
+    <sku>SKU-MPX026</sku>
+    <name>Mouse Pad XL</name>
+    <description>Extended mouse pad 900x400mm with stitched edges</description>
+    <price>19.99</price>
+    <category>Computer Peripherals</category>
+    <weight>0.35</weight>
+  </product>
+  <product>
+    <sku>SKU-REP027</sku>
+    <name>Replacement Ear Pads</name>
+    <description>Memory foam replacement ear pads for over-ear headphones</description>
+    <price>18.99</price>
+    <category>Audio</category>
+    <weight>0.05</weight>
+  </product>
+</catalog>

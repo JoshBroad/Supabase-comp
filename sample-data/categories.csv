@@ -1,0 +1,16 @@
+id,name,parent_category
+CAT-001,Electronics,
+CAT-002,Computer Peripherals,Electronics
+CAT-003,Audio,Electronics
+CAT-004,Cables,Electronics
+CAT-005,Chargers,Electronics
+CAT-006,Desk Accessories,
+CAT-007,Lighting,Desk Accessories
+CAT-008,Ergonomics,
+CAT-009,Bags & Cases,
+CAT-010,Cleaning,
+CAT-011,Computer Accessories,Electronics
+CAT-012,Office Furniture,
+CAT-013,Storage & Organization,Desk Accessories
+CAT-014,Smart Home,Electronics
+CAT-015,Stationery,Desk Accessories

@@ -10,9 +10,10 @@ import { PresenceBar } from "@/components/PresenceBar"
 import { SchemaGraph2D } from "@/components/SchemaGraph2D"
 import { SchemaGraph3D } from "@/components/SchemaGraph3D"
 import { DriftAlerts } from "@/components/DriftAlerts"
+import { ValidationPanel } from "@/components/ValidationPanel"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Loader2, ExternalLink, Play } from "lucide-react"
+import { Loader2, Database, ArrowLeft } from "lucide-react"
 
 // Helper to derive schema from events
 const deriveSchemaFromEvents = (events: BuildEvent[]) => {
@@ -167,9 +168,9 @@ export default function BuildRoomPage() {
         <div className="flex-1 flex flex-col relative">
           <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
             {session.status === 'succeeded' && (
-               <Button onClick={() => window.open(`/preview/${sessionId}`, '_blank')} className="gap-2 shadow-lg">
-                 <Play className="h-4 w-4" />
-                 Open Preview
+               <Button variant="outline" onClick={() => window.location.href = '/'} className="gap-2 shadow-lg">
+                 <Database className="h-4 w-4" />
+                 Database Ready
                </Button>
             )}
             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-[200px]">
@@ -194,6 +195,11 @@ export default function BuildRoomPage() {
                 activeFocus={architectPresence?.focus} 
               />
             )}
+          </div>
+
+          {/* Validation Panel */}
+          <div className="absolute bottom-4 left-4 w-72 z-20">
+            <ValidationPanel events={events} />
           </div>
 
           {/* Drift Alerts Overlay */}
