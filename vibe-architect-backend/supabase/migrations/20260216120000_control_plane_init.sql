@@ -1,5 +1,5 @@
-create extension if not exists pgcrypto;
-create extension if not exists vector;
+create extension if not exists pgcrypto with schema extensions;
+create extension if not exists vector with schema extensions;
 
 create table if not exists public.build_sessions (
   id uuid primary key default gen_random_uuid(),
@@ -14,7 +14,7 @@ create table if not exists public.build_sessions (
   outputs jsonb,
   error text,
   created_by uuid,
-  share_token text not null default encode(gen_random_bytes(24), 'base64url')
+  share_token text not null default replace(replace(encode(extensions.gen_random_bytes(24), 'base64'), '+', '-'), '/', '_')
 );
 
 create index if not exists build_sessions_created_at_idx on public.build_sessions (created_at desc);
@@ -36,7 +36,7 @@ create table if not exists public.spec_chunks (
   session_id uuid not null references public.build_sessions(id) on delete cascade,
   chunk_index int not null,
   content text not null,
-  embedding vector(1536),
+  embedding extensions.vector(1536),
   metadata jsonb not null default '{}'::jsonb
 );
 

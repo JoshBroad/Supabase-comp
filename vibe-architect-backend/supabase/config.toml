@@ -1,4 +1,4 @@
-project_id = ""
+project_id = "xvowyiuwbpwlnwximdtt"
 
 [api]
 enabled = true
@@ -16,4 +16,3 @@ enabled = true
 port = 54324
 
 [functions]
-enabled = true
