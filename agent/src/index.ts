@@ -38,21 +38,7 @@ app.post("/sessions", async (req, res) => {
       return;
     }
 
-    // Legacy vibe mode
-    if (!vibeText || vibeText.trim().length < 10) {
-      res.status(400).json({ error: "fileKeys[] or vibeText required" });
-      return;
-    }
-
-    const { data, error } = await supabase.rpc("session_create", {
-      p_vibe_text: vibeText,
-      p_template: template ?? "data_lake",
-      p_options: options ?? {},
-      p_file_keys: [],
-    });
-
-    if (error) throw error;
-    res.json({ sessionId: data });
+    res.status(400).json({ error: "fileKeys[] required" });
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
     console.error("Error creating session:", message);
