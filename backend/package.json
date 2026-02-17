@@ -1,5 +1,5 @@
 {
-  "name": "vibe-architect-backend",
+  "name": "backend",
   "private": true,
   "devDependencies": {
     "supabase": "^2.39.2"

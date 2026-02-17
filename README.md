@@ -28,9 +28,9 @@ This project is an intelligent "Data Lake to SQL" pipeline. It allows users to u
 
 The project consists of three main components:
 
-1.  **Frontend (`data-lake-frontend`)**: A Next.js 14 application for file uploads and real-time visualization.
+1.  **Frontend (`frontend`)**: A Next.js 14 application for file uploads and real-time visualization.
 2.  **Agent (`agent`)**: A Node.js/TypeScript autonomous agent built with **LangGraph** and **LangChain**. It acts as the "Brain", processing data and executing SQL.
-3.  **Backend / Database (`data-lake-backend`)**: A **Supabase** project providing:
+3.  **Backend / Database (`backend`)**: A **Supabase** project providing:
     - **PostgreSQL Database**: The destination for the structured data.
     - **Storage**: The "Data Lake" for raw file uploads.
     - **Realtime**: Broadcasting agent events to the frontend.
@@ -64,12 +64,12 @@ The project consists of three main components:
 ### 1. Setup Supabase
 
 1.  Create a new Supabase project.
-2.  Run the migrations in `data-lake-backend/supabase/migrations` to set up the control plane tables (`build_sessions`, `build_events`) and the `exec_sql` RPC function.
+2.2.  Run the migrations in `backend/supabase/migrations` to set up the control plane tables (`build_sessions`, `build_events`) and the `exec_sql` RPC function.
 3.  Create a Storage bucket named `uploads`.
 
 ### 2. Configure Environment Variables
 
-**Frontend (`data-lake-frontend/.env.local`)**:
+**Frontend (`frontend/.env.local`)**:
 ```env
 NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
 NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
@@ -96,7 +96,7 @@ npm run dev
 
 **Start the Frontend**:
 ```bash
-cd data-lake-frontend
+cd frontend
 npm install
 npm run dev
 ```
