@@ -8,7 +8,13 @@
       "Bash(npx next build:*)",
       "Bash(npx supabase status:*)",
       "Bash(docker:*)",
-      "Bash(docker info:*)"
+      "Bash(docker info:*)",
+      "Bash(node --version:*)",
+      "Bash(npm --version:*)",
+      "Bash(curl:*)",
+      "Bash(npm run dev:*)",
+      "Bash(netstat:*)",
+      "Bash(taskkill:*)"
     ],
     "additionalDirectories": [
       "C:\\Users\\izgin.ozdas\\Supabase-comp\\sample-data"

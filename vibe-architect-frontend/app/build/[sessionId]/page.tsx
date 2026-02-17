@@ -8,11 +8,9 @@ import { supabase, isSupabaseConfigured } from "@/lib/supabaseClient"
 import { BuildTimeline } from "@/components/BuildTimeline"
 import { PresenceBar } from "@/components/PresenceBar"
 import { SchemaGraph2D } from "@/components/SchemaGraph2D"
-import { SchemaGraph3D } from "@/components/SchemaGraph3D"
 import { DriftAlerts } from "@/components/DriftAlerts"
 import { ValidationPanel } from "@/components/ValidationPanel"
 import { Button } from "@/components/ui/button"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Loader2, Database, ArrowLeft } from "lucide-react"
 
 // Helper to derive schema from events
@@ -58,7 +56,7 @@ export default function BuildRoomPage() {
   const [schema, setSchema] = React.useState<{ nodes: SchemaNode[], edges: SchemaEdge[] }>({ nodes: [], edges: [] })
   const [driftAlerts, setDriftAlerts] = React.useState<DriftAlert[]>([])
   const [loading, setLoading] = React.useState(true)
-  const [activeTab, setActiveTab] = React.useState("2d")
+  const [activeTab, setActiveTab] = React.useState<string>("2d")
 
   // Initial fetch
   React.useEffect(() => {
@@ -173,28 +171,15 @@ export default function BuildRoomPage() {
                  Database Ready
                </Button>
             )}
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-[200px]">
-              <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="2d">2D Graph</TabsTrigger>
-                <TabsTrigger value="3d">3D Graph</TabsTrigger>
-              </TabsList>
-            </Tabs>
+            <div className="px-3 py-1.5 bg-muted rounded-md text-sm font-medium">2D Graph</div>
           </div>
 
           <div className="flex-1 bg-zinc-50/50 dark:bg-zinc-950/50 relative">
-            {activeTab === '2d' ? (
-              <SchemaGraph2D 
-                nodes={schema.nodes} 
-                edges={schema.edges} 
-                activeFocus={architectPresence?.focus} 
-              />
-            ) : (
-              <SchemaGraph3D 
-                nodes={schema.nodes} 
-                edges={schema.edges} 
-                activeFocus={architectPresence?.focus} 
-              />
-            )}
+            <SchemaGraph2D
+              nodes={schema.nodes}
+              edges={schema.edges}
+              activeFocus={architectPresence?.focus}
+            />
           </div>
 
           {/* Validation Panel */}
