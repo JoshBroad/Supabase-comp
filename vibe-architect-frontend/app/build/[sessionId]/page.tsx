@@ -4,7 +4,7 @@ import * as React from "react"
 import { useParams } from "next/navigation"
 import { api } from "@/lib/api"
 import { BuildSession, BuildEvent, PresenceState, SchemaNode, SchemaEdge, DriftAlert } from "@/lib/types"
-import { supabase } from "@/lib/supabaseClient"
+import { supabase, isSupabaseConfigured } from "@/lib/supabaseClient"
 import { BuildTimeline } from "@/components/BuildTimeline"
 import { PresenceBar } from "@/components/PresenceBar"
 import { SchemaGraph2D } from "@/components/SchemaGraph2D"
@@ -84,9 +84,9 @@ export default function BuildRoomPage() {
     }
   }, [sessionId])
 
-  // Realtime subscription
+  // Realtime subscription (if Supabase is configured)
   React.useEffect(() => {
-    if (!sessionId) return
+    if (!sessionId || !isSupabaseConfigured) return
 
     const channel = supabase.channel(`build:${sessionId}`)
 

@@ -6,7 +6,7 @@ import { FileUploadZone } from "@/components/FileUploadZone"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { api } from "@/lib/api"
-import { supabase } from "@/lib/supabaseClient"
+import { supabase, isSupabaseConfigured } from "@/lib/supabaseClient"
 import { Loader2, Database, Upload, Sparkles } from "lucide-react"
 
 const SAMPLE_FILES = [
@@ -57,20 +57,25 @@ export default function HomePage() {
       // Generate a temporary session ID for upload paths
       const tempId = crypto.randomUUID()
 
-      // Upload files to Supabase Storage
+      // Upload files to Supabase Storage (if configured), otherwise fall back to local filenames
       const fileKeys: string[] = []
-      for (const file of files) {
-        const path = `${tempId}/${file.name}`
-        const { error: uploadError } = await supabase.storage
-          .from("uploads")
-          .upload(path, file)
-
-        if (uploadError) {
-          console.error(`Upload failed for ${file.name}:`, uploadError)
-          // Fall back to using local filenames (agent can read from sample-data/)
+      if (isSupabaseConfigured) {
+        for (const file of files) {
+          const path = `${tempId}/${file.name}`
+          const { error: uploadError } = await supabase.storage
+            .from("uploads")
+            .upload(path, file)
+  
+          if (uploadError) {
+            console.error(`Upload failed for ${file.name}:`, uploadError)
+            fileKeys.push(file.name)
+          } else {
+            fileKeys.push(path)
+          }
+        }
+      } else {
+        for (const file of files) {
           fileKeys.push(file.name)
-        } else {
-          fileKeys.push(path)
         }
       }
 
