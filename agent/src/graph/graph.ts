@@ -1,6 +1,8 @@
 import { StateGraph, END } from "@langchain/langgraph";
+import { SupabaseSaver } from "@skroyc/langgraph-supabase-checkpointer";
 import { AgentState } from "./state.js";
 import type { AgentStateType } from "./state.js";
+import { getSupabaseAdmin } from "../supabase.js";
 import {
   parseFiles,
   inferEntities,
@@ -20,6 +22,8 @@ import {
  *                           no issues or max reached → generate_inserts → execute_sql → [END]
  */
 export function buildGraph() {
+  const checkpointer = new SupabaseSaver(getSupabaseAdmin());
+
   const graph = new StateGraph(AgentState)
     .addNode("parse_files", parseFiles)
     .addNode("infer_entities", inferEntities)
@@ -56,5 +60,5 @@ export function buildGraph() {
     .addEdge("generate_inserts", "execute_sql")
     .addEdge("execute_sql", END);
 
-  return graph.compile();
+  return graph.compile({ checkpointer });
 }

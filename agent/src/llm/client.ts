@@ -9,7 +9,7 @@ class OpenRouterLLM {
     this.model = model;
   }
 
-  async invoke(prompt: string): Promise<{ content: string }> {
+  async invoke(prompt: string): Promise<{ content: string; usage?: { cost?: number } }> {
     console.log("\n🤖 [AI Thinking] ----------------------------------------");
     console.log(prompt);
     console.log("--------------------------------------------------------\n");
@@ -63,7 +63,11 @@ class OpenRouterLLM {
         console.log(content);
         console.log("--------------------------------------------------------\n");
 
-        return { content };
+        const usage = data.usage
+          ? { cost: data.usage.total_tokens ? data.usage.total_tokens * 0.000001 : 0 }
+          : undefined;
+
+        return { content, usage };
       } catch (error) {
         console.error("LLM invoke error:", error);
         if (attempt === maxRetries - 1) throw error;

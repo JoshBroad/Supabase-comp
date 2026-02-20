@@ -122,6 +122,32 @@ app.get("/events", async (req, res) => {
 
 // -----------------------------------------------------------------------
 
+// GraphQL proxy — forwards queries to Supabase pg_graphql RPC
+app.post("/graphql", async (req, res) => {
+  try {
+    const { query, variables, operationName } = req.body;
+    if (!query) {
+      res.status(400).json({ error: "query required" });
+      return;
+    }
+
+    const supabase = getSupabaseAdmin();
+    const { data, error } = await supabase.rpc("graphql", {
+      operationName: operationName ?? null,
+      query,
+      variables: variables ?? {},
+      extensions: {},
+    });
+
+    if (error) throw error;
+    res.json(data);
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    console.error("GraphQL proxy error:", message);
+    res.status(500).json({ errors: [{ message }] });
+  }
+});
+
 // Trigger agent run
 app.post("/run", async (req, res) => {
   const { sessionId, fileKeys, options } = req.body;
@@ -134,30 +160,101 @@ app.post("/run", async (req, res) => {
   // Return immediately — agent runs async
   res.json({ ok: true, sessionId });
 
-  // Run the agent asynchronously
+  // Run the agent asynchronously using streaming
   (async () => {
     try {
       await updateSessionStatus(sessionId, "running");
 
-      await agent.invoke({
-        sessionId,
-        fileKeys,
-        targetDialect: options?.targetDialect ?? "postgres",
-        parsedFiles: [],
-        entities: [],
-        sqlSchema: "",
-        sqlInserts: "",
-        validationIssues: [],
-        iterationCount: 0,
-        maxIterations: 3,
-        status: "parsing",
-        error: null,
-      });
+      const stream = await agent.stream(
+        {
+          sessionId,
+          fileKeys,
+          targetDialect: options?.targetDialect ?? "postgres",
+          parsedFiles: [],
+          entities: [],
+          sqlSchema: "",
+          sqlInserts: "",
+          validationIssues: [],
+          iterationCount: 0,
+          maxIterations: 3,
+          status: "parsing",
+          error: null,
+        },
+        {
+          streamMode: "updates",
+          configurable: { thread_id: sessionId },
+        }
+      );
+
+      for await (const update of stream) {
+        // Each update is keyed by the node name that just completed
+        const nodeNames = Object.keys(update);
+        for (const nodeName of nodeNames) {
+          console.log(`[Stream] Node completed: ${nodeName}`);
+        }
+      }
     } catch (err) {
       const message = err instanceof Error ? err.message : "Unknown error";
       console.error(`Agent failed for session ${sessionId}:`, message);
       await updateSessionStatus(sessionId, "failed", { error: message });
       await emitEvent(sessionId, "build_failed", `Agent error: ${message}`, {
+        error: message,
+      });
+    }
+  })();
+});
+
+// Semantic search over indexed data lake chunks
+app.post("/search", async (req, res) => {
+  try {
+    const { query, sessionId, matchCount } = req.body;
+    if (!query) {
+      res.status(400).json({ error: "query required" });
+      return;
+    }
+
+    const { searchDocuments } = await import("./embeddings/index.js");
+    const results = await searchDocuments(query, sessionId, matchCount || 5);
+    res.json({ results });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Unknown error";
+    console.error("Search error:", message);
+    res.status(500).json({ error: message });
+  }
+});
+
+// Resume a previously interrupted run from its last checkpoint
+app.post("/resume", async (req, res) => {
+  const { sessionId } = req.body;
+
+  if (!sessionId) {
+    res.status(400).json({ error: "sessionId required" });
+    return;
+  }
+
+  res.json({ ok: true, sessionId, resumed: true });
+
+  (async () => {
+    try {
+      await updateSessionStatus(sessionId, "running");
+      await emitEvent(sessionId, "node_started", "Resuming from last checkpoint...");
+
+      const stream = await agent.stream(null, {
+        streamMode: "updates",
+        configurable: { thread_id: sessionId },
+      });
+
+      for await (const update of stream) {
+        const nodeNames = Object.keys(update);
+        for (const nodeName of nodeNames) {
+          console.log(`[Stream/Resume] Node completed: ${nodeName}`);
+        }
+      }
+    } catch (err) {
+      const message = err instanceof Error ? err.message : "Unknown error";
+      console.error(`Resume failed for session ${sessionId}:`, message);
+      await updateSessionStatus(sessionId, "failed", { error: message });
+      await emitEvent(sessionId, "build_failed", `Resume error: ${message}`, {
         error: message,
       });
     }

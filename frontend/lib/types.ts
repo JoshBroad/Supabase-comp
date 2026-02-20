@@ -31,6 +31,9 @@ export interface BuildEvent {
     | 'build_succeeded'
     | 'build_failed'
     | 'drift_detected'
+    | 'node_started'
+    | 'node_completed'
+    | 'cost_updated'
     | string;
   message: string;
   payload?: any;

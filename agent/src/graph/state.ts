@@ -2,7 +2,7 @@ import { Annotation } from "@langchain/langgraph";
 
 export interface ParsedFile {
   filename: string;
-  format: "csv" | "json" | "xml" | "text";
+  format: "csv" | "json" | "xml" | "text" | "empty";
   headers: string[];
   sampleRows: Record<string, any>[];
   rowCount: number;

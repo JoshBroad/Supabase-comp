@@ -2,6 +2,7 @@ import { readFileSync } from "fs";
 import { join } from "path";
 import { parseFile } from "../parsers/index.js";
 import { getLLM } from "../llm/client.js";
+import { indexParsedFiles } from "../embeddings/index.js";
 import {
   inferEntitiesPrompt,
   generateSqlPrompt,
@@ -118,6 +119,11 @@ export async function parseFiles(
     await emitEvent(sessionId, "build_failed", errorMsg, { error: errorMsg });
     throw new Error(errorMsg);
   }
+
+  // Non-blocking: index parsed files for semantic search (fire-and-forget)
+  indexParsedFiles(sessionId, parsedFiles).catch((err) => {
+    console.warn("[Embeddings] Background indexing failed:", err);
+  });
 
   return { parsedFiles, status: "inferring" };
 }
@@ -281,7 +287,7 @@ export async function validateSchema(
     });
   }
 
-  return { validationIssues: allIssues, status: "validating" };
+  return { validationIssues: allIssues, status: "validating", totalCost: cost };
 }
 
 // ─── Node: correct_schema ───
@@ -325,6 +331,7 @@ export async function correctSchema(
     entities: correctedEntities,
     iterationCount: iterationCount + 1,
     status: "generating",
+    totalCost: cost,
   };
 }
 
@@ -396,8 +403,6 @@ export async function executeSql(
           query: stmt + ";",
         });
         
-        // Add delay to avoid rate limiting
-        await new Promise((resolve) => setTimeout(resolve, 200));
 
         if (error) {
           console.error(`SQL error: ${error.message}\nStatement: ${stmt}`);

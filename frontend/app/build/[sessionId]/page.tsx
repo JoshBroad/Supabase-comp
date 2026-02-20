@@ -11,6 +11,7 @@ import { SchemaGraph2D } from "@/components/SchemaGraph2D"
 import { SchemaGraph3D } from "@/components/SchemaGraph3D"
 import { DriftAlerts } from "@/components/DriftAlerts"
 import { ValidationPanel } from "@/components/ValidationPanel"
+import { GraphQLExplorer } from "@/components/GraphQLExplorer"
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Loader2, Database, ArrowLeft } from "lucide-react"
@@ -54,7 +55,11 @@ const deriveSchemaFromEvents = (events: BuildEvent[]) => {
     
     if (event.type === 'table_created') {
       const tableName = event.payload?.name || `table_${event.id.substring(0,4)}`
-      if (!nodes.find(n => n.id === tableName)) {
+      const existing = nodes.find(n => n.id === tableName)
+      if (existing) {
+        // Update meta with columnTypes from table_created event
+        existing.meta = { ...existing.meta, ...event.payload }
+      } else {
         nodes.push({
           id: tableName,
           label: tableName,
@@ -256,32 +261,37 @@ export default function BuildRoomPage() {
                  Database Ready
                </Button>
             )}
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="w-[200px]">
-              <TabsList className="grid w-full grid-cols-2">
+            <Tabs value={activeTab} onValueChange={setActiveTab} className={session.status === 'succeeded' ? "w-[300px]" : "w-[200px]"}>
+              <TabsList className={session.status === 'succeeded' ? "grid w-full grid-cols-3" : "grid w-full grid-cols-2"}>
                 <TabsTrigger value="2d">2D Graph</TabsTrigger>
                 <TabsTrigger value="3d">3D Graph</TabsTrigger>
+                {session.status === 'succeeded' && <TabsTrigger value="graphql">GraphQL</TabsTrigger>}
               </TabsList>
             </Tabs>
           </div>
 
           <div className="flex-1 bg-zinc-50/50 dark:bg-zinc-950/50 relative flex items-center justify-center">
-            {schema.nodes.length === 0 ? (
+            {activeTab === 'graphql' ? (
+              <div className="w-full h-full overflow-auto p-6">
+                <GraphQLExplorer tables={schema.nodes.map(n => n.label)} />
+              </div>
+            ) : schema.nodes.length === 0 ? (
               <div className="flex flex-col items-center gap-2 text-muted-foreground animate-pulse">
                 <Loader2 className="h-8 w-8 animate-spin" />
                 <span>Waiting for schema generation...</span>
               </div>
             ) : (
               activeTab === '2d' ? (
-                <SchemaGraph2D 
-                  nodes={schema.nodes} 
-                  edges={schema.edges} 
-                  activeFocus={architectPresence?.focus} 
+                <SchemaGraph2D
+                  nodes={schema.nodes}
+                  edges={schema.edges}
+                  activeFocus={architectPresence?.focus}
                 />
               ) : (
-                <SchemaGraph3D 
-                  nodes={schema.nodes} 
-                  edges={schema.edges} 
-                  activeFocus={architectPresence?.focus} 
+                <SchemaGraph3D
+                  nodes={schema.nodes}
+                  edges={schema.edges}
+                  activeFocus={architectPresence?.focus}
                 />
               )
             )}

@@ -4,16 +4,11 @@ const API_BASE_URL = process.env.NEXT_PUBLIC_BACKEND_BASE_URL;
 const AGENT_URL = process.env.NEXT_PUBLIC_AGENT_URL || 'http://localhost:3001';
 const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-const supabaseHeaders =
-  SUPABASE_ANON_KEY
-    ? {
-        'Content-Type': 'application/json',
-        apikey: SUPABASE_ANON_KEY,
-        Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
-      }
-    : {
-        'Content-Type': 'application/json',
-      };
+const supabaseHeaders: Record<string, string> = { 'Content-Type': 'application/json' };
+if (SUPABASE_ANON_KEY) {
+  supabaseHeaders['apikey'] = SUPABASE_ANON_KEY;
+  supabaseHeaders['Authorization'] = `Bearer ${SUPABASE_ANON_KEY}`;
+}
 
 export const api = {
   createSession: async (fileKeys: string[]): Promise<{ sessionId: string }> => {
