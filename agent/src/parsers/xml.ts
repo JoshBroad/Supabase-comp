@@ -2,6 +2,11 @@ import { XMLParser } from "fast-xml-parser";
 import type { ParsedFile } from "../graph/state.js";
 
 export function parseXml(filename: string, content: string): ParsedFile {
+  let cleanContent = content.trim();
+  if (cleanContent.charCodeAt(0) === 0xFEFF) {
+    cleanContent = cleanContent.slice(1);
+  }
+
   const parser = new XMLParser({
     ignoreAttributes: false,
     trimValues: true,

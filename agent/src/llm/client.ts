@@ -10,6 +10,10 @@ class OpenRouterLLM {
   }
 
   async invoke(prompt: string): Promise<{ content: string }> {
+    console.log("\n🤖 [AI Thinking] ----------------------------------------");
+    console.log(prompt);
+    console.log("--------------------------------------------------------\n");
+
     const maxRetries = 5;
     let attempt = 0;
     
@@ -55,6 +59,10 @@ class OpenRouterLLM {
             ? choice.message.content
             : "";
 
+        console.log("\n💡 [AI Response] ---------------------------------------");
+        console.log(content);
+        console.log("--------------------------------------------------------\n");
+
         return { content };
       } catch (error) {
         console.error("LLM invoke error:", error);
@@ -79,8 +87,8 @@ export function getLLM(): OpenRouterLLM {
   }
 
   // Use a capable model for schema inference. 
-  // User requested GPT OSS
-  llm = new OpenRouterLLM(apiKey, "openai/gpt-oss-120b:free");
+  // User requested Gemini 3 Pro Preview
+  llm = new OpenRouterLLM(apiKey, "google/gemini-3-pro-preview");
 
   return llm;
 }

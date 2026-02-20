@@ -17,47 +17,77 @@ const supabaseHeaders =
 
 export const api = {
   createSession: async (fileKeys: string[]): Promise<{ sessionId: string }> => {
-    const response = await fetch(`${API_BASE_URL}/sessions`, {
-      method: 'POST',
-      headers: supabaseHeaders,
-      body: JSON.stringify({ fileKeys }),
-    });
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({ error: 'Unknown error' }));
-      throw new Error(error.error || 'Failed to create session');
+    console.log('API: Creating session with files:', fileKeys);
+    try {
+      const response = await fetch(`${API_BASE_URL}/sessions`, {
+        method: 'POST',
+        headers: supabaseHeaders,
+        body: JSON.stringify({ fileKeys }),
+      });
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({ error: 'Unknown error' }));
+        console.error('API: Failed to create session:', error);
+        throw new Error(error.error || 'Failed to create session');
+      }
+      const data = await response.json();
+      console.log('API: Session created:', data);
+      return data;
+    } catch (e) {
+      console.error('API: Network error creating session:', e);
+      throw e;
     }
-    return response.json();
   },
 
   triggerAgent: async (sessionId: string, fileKeys: string[]): Promise<void> => {
-    const response = await fetch(`${AGENT_URL}/run`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ sessionId, fileKeys }),
-    });
-    if (!response.ok) {
-      const error = await response.json().catch(() => ({ error: 'Unknown error' }));
-      throw new Error(error.error || 'Failed to trigger agent');
+    console.log('API: Triggering agent for session:', sessionId);
+    try {
+      const response = await fetch(`${AGENT_URL}/run`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionId, fileKeys }),
+      });
+      if (!response.ok) {
+        const error = await response.json().catch(() => ({ error: 'Unknown error' }));
+        console.error('API: Failed to trigger agent:', error);
+        throw new Error(error.error || 'Failed to trigger agent');
+      }
+      console.log('API: Agent triggered successfully');
+    } catch (e) {
+      console.error('API: Network error triggering agent:', e);
+      throw e;
     }
   },
 
   getSession: async (sessionId: string): Promise<BuildSession> => {
-    const response = await fetch(`${API_BASE_URL}/sessions?id=${sessionId}`, {
-      headers: supabaseHeaders,
-    });
-    if (!response.ok) {
-      throw new Error('Failed to get session');
+    // console.log('API: Fetching session:', sessionId);
+    try {
+      const response = await fetch(`${API_BASE_URL}/sessions?id=${sessionId}`, {
+        headers: supabaseHeaders,
+      });
+      if (!response.ok) {
+        console.error('API: Failed to get session:', response.statusText);
+        throw new Error('Failed to get session');
+      }
+      return response.json();
+    } catch (e) {
+      console.error('API: Network error getting session:', e);
+      throw e;
     }
-    return response.json();
   },
 
   getEvents: async (sessionId: string): Promise<BuildEvent[]> => {
-    const response = await fetch(`${API_BASE_URL}/events?session_id=${sessionId}`, {
-      headers: supabaseHeaders,
-    });
-    if (!response.ok) {
-      throw new Error('Failed to get events');
+    try {
+      const response = await fetch(`${API_BASE_URL}/events?session_id=${sessionId}`, {
+        headers: supabaseHeaders,
+      });
+      if (!response.ok) {
+        console.error('API: Failed to get events:', response.statusText);
+        throw new Error('Failed to get events');
+      }
+      return response.json();
+    } catch (e) {
+      console.error('API: Network error getting events:', e);
+      throw e;
     }
-    return response.json();
   }
 };

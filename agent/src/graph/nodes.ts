@@ -58,6 +58,7 @@ export async function parseFiles(
   const { sessionId, fileKeys } = state;
 
   await emitEvent(sessionId, "parsing_started", `Parsing ${fileKeys.length} files...`);
+  console.log(`\n📂 [Parsing] Processing ${fileKeys.length} files...`);
 
   const parsedFiles = [];
 
@@ -83,6 +84,16 @@ export async function parseFiles(
 
       const filename = fileKey.split("/").pop() || fileKey;
       const parsed = parseFile(filename, content);
+      
+      // Validate parsed content
+      if (!parsed.headers || parsed.headers.length === 0) {
+        console.warn(`Warning: No headers found in ${filename}`);
+        await emitEvent(sessionId, "file_parsed", `Warning: No headers found in ${filename}`, {
+          filename,
+          warning: "No headers detected"
+        });
+      }
+
       parsedFiles.push(parsed);
 
       await emitEvent(sessionId, "file_parsed", `Parsed ${filename}`, {
@@ -99,6 +110,13 @@ export async function parseFiles(
         error: err instanceof Error ? err.message : "Unknown error",
       });
     }
+  }
+
+  if (parsedFiles.length === 0) {
+    const errorMsg = "No files were successfully parsed. Please check your file formats.";
+    console.error(errorMsg);
+    await emitEvent(sessionId, "build_failed", errorMsg, { error: errorMsg });
+    throw new Error(errorMsg);
   }
 
   return { parsedFiles, status: "inferring" };
@@ -133,10 +151,14 @@ export async function inferEntities(
       columnCount: e.columns.length,
       foreignKeyCount: e.foreignKeys.length,
       sourceFiles: e.sourceFiles,
+      foreignKeys: e.foreignKeys.map(fk => ({
+        column: fk.column,
+        targetTable: fk.referencesTable
+      }))
     })),
   });
 
-  return { entities, status: "generating" };
+  return { entities, status: "generating", totalCost: (response.usage?.cost || 0) };
 }
 
 // ─── Node: generate_sql ───
@@ -182,6 +204,7 @@ export async function validateSchema(
     "validating_schema",
     `Validating schema (pass ${iterationCount + 1})...`
   );
+  console.log(`\n✅ [Validating] Checking schema (Pass ${iterationCount + 1})...`);
 
   // Programmatic checks
   const programmaticIssues: ValidationIssue[] = [];
@@ -217,6 +240,12 @@ export async function validateSchema(
   const prompt = validateSchemaPrompt(sqlSchema, entities, parsedFiles);
   const response = await llm.invoke(prompt);
   const content = typeof response.content === "string" ? response.content : "";
+
+  const cost = response.usage?.cost || 0;
+  await emitEvent(sessionId, "cost_updated", `Cost updated: $${cost.toFixed(4)}`, {
+    cost,
+    totalCost: (state.totalCost || 0) + cost
+  });
 
   let llmIssues: ValidationIssue[] = [];
   try {
@@ -271,6 +300,12 @@ export async function correctSchema(
   const response = await llm.invoke(prompt);
   const content = typeof response.content === "string" ? response.content : "";
 
+  const cost = response.usage?.cost || 0;
+  await emitEvent(sessionId, "cost_updated", `Cost updated: $${cost.toFixed(4)}`, {
+    cost,
+    totalCost: (state.totalCost || 0) + cost
+  });
+
   let correctedEntities: InferredEntity[];
   try {
     const json = JSON.parse(extractJson(content));
@@ -306,7 +341,13 @@ export async function generateInserts(
   const content = typeof response.content === "string" ? response.content : "";
   const sqlInserts = extractSql(content);
 
-  return { sqlInserts, status: "inserting" };
+  const cost = response.usage?.cost || 0;
+  await emitEvent(sessionId, "cost_updated", `Cost updated: $${cost.toFixed(4)}`, {
+    cost,
+    totalCost: (state.totalCost || 0) + cost
+  });
+
+  return { sqlInserts, status: "inserting", totalCost: (response.usage?.cost || 0) };
 }
 
 // ─── Node: execute_sql ───

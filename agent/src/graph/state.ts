@@ -75,6 +75,10 @@ export const AgentState = Annotation.Root({
     reducer: (_, update) => update,
     default: () => null,
   }),
+  totalCost: Annotation<number>({
+    reducer: (prev, update) => prev + update,
+    default: () => 0,
+  }),
 });
 
 export type AgentStateType = typeof AgentState.State;

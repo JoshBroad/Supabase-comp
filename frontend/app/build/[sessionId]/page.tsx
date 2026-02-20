@@ -21,6 +21,37 @@ const deriveSchemaFromEvents = (events: BuildEvent[]) => {
   const edges: SchemaEdge[] = []
 
   events.forEach(event => {
+    if (event.type === 'entities_inferred') {
+      // Clear previous nodes/edges if we get a fresh inference
+      // nodes.length = 0
+      // edges.length = 0
+      // Actually, let's just add/update them
+      const entities = event.payload?.entities || []
+      entities.forEach((entity: any) => {
+        if (!nodes.find(n => n.id === entity.name)) {
+          nodes.push({
+            id: entity.name,
+            label: entity.name,
+            type: 'table',
+            meta: entity
+          })
+        }
+        if (entity.foreignKeys) {
+          entity.foreignKeys.forEach((fk: any) => {
+             const edgeId = `fk_${entity.name}_${fk.targetTable}`
+             if (!edges.find(e => e.id === edgeId)) {
+               edges.push({
+                 id: edgeId,
+                 source: entity.name,
+                 target: fk.targetTable,
+                 label: fk.column
+               })
+             }
+          })
+        }
+      })
+    }
+    
     if (event.type === 'table_created') {
       const tableName = event.payload?.name || `table_${event.id.substring(0,4)}`
       if (!nodes.find(n => n.id === tableName)) {
@@ -48,6 +79,16 @@ const deriveSchemaFromEvents = (events: BuildEvent[]) => {
   return { nodes, edges }
 }
 
+const deriveFocusFromEvent = (event: BuildEvent) => {
+  if (event.type.includes('parsing')) return { type: 'Parsing', name: event.payload?.filename || 'files' }
+  if (event.type.includes('schema') || event.type === 'table_created') return { type: 'Designing', name: 'Schema' }
+  if (event.type.includes('sql') || event.type === 'data_inserted') return { type: 'Executing', name: 'SQL' }
+  if (event.type === 'build_succeeded') return { type: 'Completed', name: 'Database Ready' }
+  if (event.type === 'build_failed') return { type: 'Error', name: 'Build Failed' }
+  return undefined
+}
+
+
 export default function BuildRoomPage() {
   const params = useParams()
   const sessionId = params.sessionId as string
@@ -57,6 +98,8 @@ export default function BuildRoomPage() {
   const [presence, setPresence] = React.useState<PresenceState[]>([])
   const [schema, setSchema] = React.useState<{ nodes: SchemaNode[], edges: SchemaEdge[] }>({ nodes: [], edges: [] })
   const [driftAlerts, setDriftAlerts] = React.useState<DriftAlert[]>([])
+  const [totalCost, setTotalCost] = React.useState(0)
+  const [virtualArchitect, setVirtualArchitect] = React.useState<PresenceState | null>(null)
   const [loading, setLoading] = React.useState(true)
   const [activeTab, setActiveTab] = React.useState("2d")
 
@@ -71,6 +114,23 @@ export default function BuildRoomPage() {
         setSession(sessionData)
         setEvents(eventsData)
         setSchema(deriveSchemaFromEvents(eventsData))
+        
+        // Restore cost from events
+        const lastCostEvent = [...eventsData].reverse().find(e => e.payload?.totalCost !== undefined)
+        if (lastCostEvent?.payload?.totalCost) {
+          setTotalCost(lastCostEvent.payload.totalCost)
+        }
+
+        // Restore virtual architect state from last event
+        const lastEvent = eventsData[eventsData.length - 1]
+        if (lastEvent) {
+          setVirtualArchitect({
+            actor: 'architect',
+            step: lastEvent.message,
+            progress: 0,
+            focus: deriveFocusFromEvent(lastEvent)
+          })
+        }
       } catch (err) {
         console.error(err)
         // toast.error("Failed to load session")
@@ -110,6 +170,18 @@ export default function BuildRoomPage() {
           return newEvents
         })
         
+        // Update virtual architect
+        setVirtualArchitect({
+          actor: 'architect',
+          step: newEvent.message,
+          progress: 0,
+          focus: deriveFocusFromEvent(newEvent)
+        })
+
+        if (newEvent.payload?.totalCost) {
+          setTotalCost(newEvent.payload.totalCost)
+        }
+        
         if (newEvent.type === 'drift_detected') {
           setDriftAlerts(prev => [...prev, {
             id: newEvent.id,
@@ -134,6 +206,19 @@ export default function BuildRoomPage() {
     }
   }, [sessionId])
 
+  const finalPresence = React.useMemo(() => {
+    const architect = presence.find(p => p.actor === 'architect')
+    if (architect) return presence
+    
+    // If no real architect presence, use virtual
+    if (virtualArchitect) {
+        return [virtualArchitect, ...presence]
+    }
+    return presence
+  }, [presence, virtualArchitect])
+
+  const architectPresence = finalPresence.find(p => p.actor === 'architect')
+
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center">
@@ -151,12 +236,10 @@ export default function BuildRoomPage() {
     )
   }
 
-  const architectPresence = presence.find(p => p.actor === 'architect')
-
   return (
     <div className="flex flex-col h-screen bg-background overflow-hidden">
       {/* Header / Presence Bar */}
-      <PresenceBar presence={presence} currentFocus={architectPresence?.focus} />
+      <PresenceBar presence={finalPresence} currentFocus={architectPresence?.focus} totalCost={totalCost} />
 
       <div className="flex-1 flex overflow-hidden">
         {/* Left Panel: Timeline */}
@@ -181,19 +264,26 @@ export default function BuildRoomPage() {
             </Tabs>
           </div>
 
-          <div className="flex-1 bg-zinc-50/50 dark:bg-zinc-950/50 relative">
-            {activeTab === '2d' ? (
-              <SchemaGraph2D 
-                nodes={schema.nodes} 
-                edges={schema.edges} 
-                activeFocus={architectPresence?.focus} 
-              />
+          <div className="flex-1 bg-zinc-50/50 dark:bg-zinc-950/50 relative flex items-center justify-center">
+            {schema.nodes.length === 0 ? (
+              <div className="flex flex-col items-center gap-2 text-muted-foreground animate-pulse">
+                <Loader2 className="h-8 w-8 animate-spin" />
+                <span>Waiting for schema generation...</span>
+              </div>
             ) : (
-              <SchemaGraph3D 
-                nodes={schema.nodes} 
-                edges={schema.edges} 
-                activeFocus={architectPresence?.focus} 
-              />
+              activeTab === '2d' ? (
+                <SchemaGraph2D 
+                  nodes={schema.nodes} 
+                  edges={schema.edges} 
+                  activeFocus={architectPresence?.focus} 
+                />
+              ) : (
+                <SchemaGraph3D 
+                  nodes={schema.nodes} 
+                  edges={schema.edges} 
+                  activeFocus={architectPresence?.focus} 
+                />
+              )
             )}
           </div>
 

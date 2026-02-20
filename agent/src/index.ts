@@ -6,6 +6,22 @@ import { updateSessionStatus, emitEvent } from "./broadcast.js";
 import { getSupabaseAdmin } from "./supabase.js";
 
 const app = express();
+
+// --- DEBUG LOGGING ---
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
+  next();
+});
+
+process.on('uncaughtException', (err) => {
+  console.error('❌ UNCAUGHT EXCEPTION:', err);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ UNHANDLED REJECTION:', reason);
+});
+// ---------------------
+
 app.use(cors());
 app.use(express.json());
 

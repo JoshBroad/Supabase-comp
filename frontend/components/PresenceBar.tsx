@@ -8,9 +8,10 @@ import { User, Cpu } from "lucide-react"
 interface PresenceBarProps {
   presence: PresenceState[]
   currentFocus?: { type: string; name: string }
+  totalCost?: number
 }
 
-export function PresenceBar({ presence, currentFocus }: PresenceBarProps) {
+export function PresenceBar({ presence, currentFocus, totalCost = 0 }: PresenceBarProps) {
   // Filter for architect and users
   const architect = presence.find(p => p.actor === 'architect')
   const users = presence.filter(p => p.actor === 'user')
@@ -46,6 +47,13 @@ export function PresenceBar({ presence, currentFocus }: PresenceBarProps) {
           <Badge variant="outline" className="ml-4 gap-1">
             <span className="text-muted-foreground">Focus:</span>
             <span className="font-medium">{currentFocus.type} / {currentFocus.name}</span>
+          </Badge>
+        )}
+
+        {(totalCost || 0) > 0 && (
+          <Badge variant="secondary" className="ml-4 gap-1 font-mono">
+            <span className="text-muted-foreground">Cost:</span>
+            <span>${(totalCost || 0).toFixed(4)}</span>
           </Badge>
         )}
       </div>

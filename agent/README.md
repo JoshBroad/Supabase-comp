@@ -27,7 +27,7 @@ The agent operates as a state machine with the following nodes:
 
 -   **Runtime**: Node.js (TypeScript)
 -   **Orchestration**: LangGraph (State Management)
--   **AI/LLM**: LangChain + OpenRouter (DeepSeek R1, GPT-OSS-120B, Llama 3)
+-   **AI/LLM**: LangChain + OpenRouter (select your desired model)
 -   **API**: Express.js (REST endpoints)
 -   **Database**: Supabase (via `supabase-js`)
 

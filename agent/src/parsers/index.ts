@@ -6,6 +6,19 @@ import type { ParsedFile } from "../graph/state.js";
 
 export function parseFile(filename: string, content: string): ParsedFile {
   const ext = filename.split(".").pop()?.toLowerCase() || "";
+  console.log(`[Parser] Parsing ${filename} (${content.length} bytes) as ${ext || "auto"}`);
+
+  if (!content || content.trim().length === 0) {
+    console.warn(`[Parser] Skipping empty file: ${filename}`);
+    return {
+      filename,
+      format: "empty",
+      headers: [],
+      sampleRows: [],
+      rowCount: 0,
+      rawPreview: "",
+    };
+  }
 
   switch (ext) {
     case "csv":

@@ -1,0 +1,53 @@
+version: "2"
+type: frontend
+tech_stack:
+  - TypeScript
+  - Next.js
+  - React
+  - Tailwind CSS
+  - Supabase
+routes:
+  - path: /
+    file: app/page.tsx
+    auth_required: false
+    description: Landing page for file upload
+  - path: /build/[sessionId]
+    file: app/build/[sessionId]/page.tsx
+    auth_required: false
+    description: Build session progress and results page
+features:
+  - name: File Upload and Analysis
+    description: Upload files to start the data lake to SQL conversion process
+    files:
+      - app/page.tsx
+      - components/FileUploadZone.tsx
+      - lib/api.ts
+    entry_route: /
+    user_interactions:
+      - Drag and drop files onto the upload zone
+      - Click "Load Sample E-Commerce Data" button
+      - Click "Analyze Files & Build Database" button
+    api_calls:
+      - method: POST
+        endpoint: /sessions
+      - method: POST
+        endpoint: /run
+    auth_required: false
+  - name: Build Session Monitoring
+    description: Monitor the progress of the agent and view results
+    files:
+      - app/build/[sessionId]/page.tsx
+      - components/BuildTimeline.tsx
+      - components/SchemaGraph2D.tsx
+    entry_route: /build/[sessionId]
+    user_interactions:
+      - View progress steps
+      - View generated SQL schema
+      - View ERD visualization
+    api_calls:
+      - method: GET
+        endpoint: /sessions
+      - method: GET
+        endpoint: /events
+    auth_required: false
+known_limitations: []

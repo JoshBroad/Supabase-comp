@@ -2,8 +2,13 @@ import { parse } from "csv-parse/sync";
 import type { ParsedFile } from "../graph/state.js";
 
 export function parseCsv(filename: string, content: string): ParsedFile {
+  let cleanContent = content.trim();
+  if (cleanContent.charCodeAt(0) === 0xFEFF) {
+    cleanContent = cleanContent.slice(1);
+  }
+
   // Handle files with repeated headers (like our messy customers.csv)
-  const lines = content.split("\n").filter((l) => l.trim());
+  const lines = cleanContent.split("\n").filter((l) => l.trim());
   const firstHeader = lines[0];
 
   // Remove duplicate header rows
