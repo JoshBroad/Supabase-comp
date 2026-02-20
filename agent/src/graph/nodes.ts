@@ -125,13 +125,14 @@ export async function parseFiles(
 // ─── Node: infer_entities ───
 export async function inferEntities(
   state: AgentStateType
+
 ): Promise<Partial<AgentStateType>> {
-  const { sessionId, parsedFiles } = state;
+  const { sessionId, parsedFiles, targetDialect } = state;
 
   await emitEvent(sessionId, "inferring_started", "Analyzing data to identify entities and relationships...");
 
   const llm = getLLM();
-  const prompt = inferEntitiesPrompt(parsedFiles);
+  const prompt = inferEntitiesPrompt(parsedFiles, targetDialect);
   const response = await llm.invoke(prompt);
   const content = typeof response.content === "string" ? response.content : "";
 
@@ -165,12 +166,12 @@ export async function inferEntities(
 export async function generateSql(
   state: AgentStateType
 ): Promise<Partial<AgentStateType>> {
-  const { sessionId, entities } = state;
+  const { sessionId, entities, targetDialect } = state;
 
-  await emitEvent(sessionId, "generating_schema", "Generating SQL schema...");
+  await emitEvent(sessionId, "generating_schema", `Generating ${targetDialect || 'SQL'} schema...`);
 
   const llm = getLLM();
-  const prompt = generateSqlPrompt(entities);
+  const prompt = generateSqlPrompt(entities, targetDialect);
   const response = await llm.invoke(prompt);
   const content = typeof response.content === "string" ? response.content : "";
   const sqlSchema = extractSql(content);
@@ -197,7 +198,7 @@ export async function generateSql(
 export async function validateSchema(
   state: AgentStateType
 ): Promise<Partial<AgentStateType>> {
-  const { sessionId, sqlSchema, entities, parsedFiles, iterationCount } = state;
+  const { sessionId, sqlSchema, entities, parsedFiles, iterationCount, targetDialect } = state;
 
   await emitEvent(
     sessionId,
@@ -237,7 +238,7 @@ export async function validateSchema(
 
   // LLM validation
   const llm = getLLM();
-  const prompt = validateSchemaPrompt(sqlSchema, entities, parsedFiles);
+  const prompt = validateSchemaPrompt(sqlSchema, entities, parsedFiles, targetDialect);
   const response = await llm.invoke(prompt);
   const content = typeof response.content === "string" ? response.content : "";
 
@@ -287,7 +288,7 @@ export async function validateSchema(
 export async function correctSchema(
   state: AgentStateType
 ): Promise<Partial<AgentStateType>> {
-  const { sessionId, entities, validationIssues, iterationCount } = state;
+  const { sessionId, entities, validationIssues, iterationCount, targetDialect } = state;
 
   await emitEvent(
     sessionId,
@@ -296,7 +297,7 @@ export async function correctSchema(
   );
 
   const llm = getLLM();
-  const prompt = correctSchemaPrompt(entities, validationIssues);
+  const prompt = correctSchemaPrompt(entities, validationIssues, targetDialect);
   const response = await llm.invoke(prompt);
   const content = typeof response.content === "string" ? response.content : "";
 
@@ -331,12 +332,12 @@ export async function correctSchema(
 export async function generateInserts(
   state: AgentStateType
 ): Promise<Partial<AgentStateType>> {
-  const { sessionId, sqlSchema, parsedFiles, entities } = state;
+  const { sessionId, sqlSchema, parsedFiles, entities, targetDialect } = state;
 
   await emitEvent(sessionId, "data_insertion_started", "Generating INSERT statements from source data...");
 
   const llm = getLLM();
-  const prompt = generateInsertsPrompt(sqlSchema, parsedFiles, entities);
+  const prompt = generateInsertsPrompt(sqlSchema, parsedFiles, entities, targetDialect);
   const response = await llm.invoke(prompt);
   const content = typeof response.content === "string" ? response.content : "";
   const sqlInserts = extractSql(content);
@@ -354,7 +355,24 @@ export async function generateInserts(
 export async function executeSql(
   state: AgentStateType
 ): Promise<Partial<AgentStateType>> {
-  const { sessionId, sqlSchema, sqlInserts } = state;
+  const { sessionId, sqlSchema, sqlInserts, targetDialect } = state;
+
+  // Check if we can execute this dialect
+  const isPostgres = !targetDialect || targetDialect.toLowerCase() === 'postgres' || targetDialect.toLowerCase() === 'postgresql';
+
+  if (!isPostgres) {
+    const msg = `Skipped execution for ${targetDialect} (only Postgres supported for auto-deploy). SQL is ready.`;
+    console.log(msg);
+    await emitEvent(sessionId, "schema_applied", msg);
+    await emitEvent(sessionId, "data_inserted", "Skipped data insertion (non-Postgres dialect)");
+    
+    await updateSessionStatus(sessionId, "succeeded");
+    await emitEvent(sessionId, "build_succeeded", `Database build complete (SQL generated for ${targetDialect})`, {
+      tableCount: state.entities.length,
+    });
+    
+    return { status: "complete" };
+  }
 
   await emitEvent(sessionId, "executing_sql", "Executing SQL against database...");
 

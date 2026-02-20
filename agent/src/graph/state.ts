@@ -75,6 +75,10 @@ export const AgentState = Annotation.Root({
     reducer: (_, update) => update,
     default: () => null,
   }),
+  targetDialect: Annotation<string>({
+    reducer: (_, update) => update,
+    default: () => "postgres",
+  }),
   totalCost: Annotation<number>({
     reducer: (prev, update) => prev + update,
     default: () => 0,

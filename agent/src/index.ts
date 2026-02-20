@@ -124,7 +124,7 @@ app.get("/events", async (req, res) => {
 
 // Trigger agent run
 app.post("/run", async (req, res) => {
-  const { sessionId, fileKeys } = req.body;
+  const { sessionId, fileKeys, options } = req.body;
 
   if (!sessionId || !fileKeys || !Array.isArray(fileKeys)) {
     res.status(400).json({ error: "sessionId and fileKeys[] required" });
@@ -142,6 +142,7 @@ app.post("/run", async (req, res) => {
       await agent.invoke({
         sessionId,
         fileKeys,
+        targetDialect: options?.targetDialect ?? "postgres",
         parsedFiles: [],
         entities: [],
         sqlSchema: "",
