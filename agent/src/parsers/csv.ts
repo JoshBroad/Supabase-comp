@@ -7,24 +7,43 @@ export function parseCsv(filename: string, content: string): ParsedFile {
     cleanContent = cleanContent.slice(1);
   }
 
-  // Handle files with repeated headers (like our messy customers.csv)
   const lines = cleanContent.split("\n").filter((l) => l.trim());
-  const firstHeader = lines[0];
+  if (lines.length === 0) {
+    return {
+      filename,
+      format: "csv",
+      headers: [],
+      sampleRows: [],
+      rowCount: 0,
+      rawPreview: "",
+    };
+  }
 
-  // Remove duplicate header rows
+  const firstHeader = lines[0].trim();
+  
+  // Detect delimiter (comma, semicolon, tab)
+  const delimiters = [",", ";", "\t"];
+  let detectedDelimiter = ",";
+  let maxCount = 0;
+  
+  for (const d of delimiters) {
+    const count = (firstHeader.match(new RegExp(`\\${d}`, "g")) || []).length;
+    if (count > maxCount) {
+      maxCount = count;
+      detectedDelimiter = d;
+    }
+  }
+
+  // Remove duplicate header rows (generic approach)
+  // We compare normalized lines to the first header
+  const firstHeaderNormalized = firstHeader.toLowerCase().replace(/\s/g, "");
+  
   const cleanedLines = [
-    firstHeader,
+    lines[0], // Keep the first header
     ...lines.slice(1).filter((l) => {
-      const normalized = l.toLowerCase().replace(/[_\s]/g, "");
-      const headerNormalized = firstHeader.toLowerCase().replace(/[_\s]/g, "");
-      // Skip lines that look like header variations
-      const isHeader =
-        normalized.startsWith("custid,") ||
-        normalized.startsWith("customerid,") ||
-        (normalized.includes("first_name") &&
-          normalized.includes("last_name") &&
-          normalized.includes("email"));
-      return !isHeader;
+      const lineNormalized = l.trim().toLowerCase().replace(/\s/g, "");
+      // If line is identical to header, skip it
+      return lineNormalized !== firstHeaderNormalized;
     }),
   ];
 
@@ -33,6 +52,7 @@ export function parseCsv(filename: string, content: string): ParsedFile {
     skip_empty_lines: true,
     relax_column_count: true,
     trim: true,
+    delimiter: detectedDelimiter,
   });
 
   const headers = records.length > 0 ? Object.keys(records[0]) : [];

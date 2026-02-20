@@ -7,8 +7,7 @@ export function parseJson(filename: string, content: string): ParsedFile {
     cleanContent = cleanContent.slice(1);
   }
 
-  // Basic comment stripping (// and /* */) - simplistic regex approach
-  // This is not perfect but handles simple cases often found in "JSON" config files
+  // Basic comment stripping (// and /* */)
   cleanContent = cleanContent
     .replace(/\/\*[\s\S]*?\*\//g, "")
     .replace(/\/\/.*/g, "");
@@ -27,7 +26,43 @@ export function parseJson(filename: string, content: string): ParsedFile {
     }
   }
 
-  const records = Array.isArray(data) ? data : [data];
+  let records: any[] = [];
+
+  if (Array.isArray(data)) {
+    records = data;
+  } else if (typeof data === "object" && data !== null) {
+    // Check if it's a wrapper object
+    const keys = Object.keys(data);
+    
+    // Heuristic: if there's a key like "data", "items", "results", "rows" that is an array, use it
+    const candidateKeys = ["data", "items", "results", "rows", "records", "value"];
+    let foundArray = false;
+    
+    for (const key of candidateKeys) {
+      if (Array.isArray(data[key])) {
+        records = data[key];
+        foundArray = true;
+        break;
+      }
+    }
+    
+    // If not found by name, check if there is exactly one key that is an array
+    if (!foundArray) {
+      const arrayKeys = keys.filter(k => Array.isArray(data[k]));
+      if (arrayKeys.length === 1) {
+        records = data[arrayKeys[0]];
+        foundArray = true;
+      }
+    }
+    
+    // If still not found, treat the object itself as a single record
+    if (!foundArray) {
+      records = [data];
+    }
+  } else {
+    // Primitive value?
+    records = [];
+  }
 
   // Collect all unique keys across all records
   const headerSet = new Set<string>();
