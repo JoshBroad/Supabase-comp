@@ -8,7 +8,18 @@
       "Bash(npx next build:*)",
       "Bash(npx supabase status:*)",
       "Bash(docker:*)",
-      "Bash(docker info:*)"
+      "Bash(docker info:*)",
+      "WebSearch",
+      "Bash(xargs:*)",
+      "WebFetch(domain:www.npmjs.com)",
+      "WebFetch(domain:supabase.com)",
+      "WebFetch(domain:js.langchain.com)",
+      "WebFetch(domain:reactflow.dev)",
+      "WebFetch(domain:docs.langchain.com)",
+      "Bash(npm view:*)",
+      "mcp__ide__getDiagnostics",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ],
     "additionalDirectories": [
       "C:\\Users\\izgin.ozdas\\Supabase-comp\\sample-data"
