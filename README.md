@@ -11,7 +11,7 @@
 
 Upload a pile of `CSV`, `JSON`, `XML`, and `TXT` files. An autonomous [LangGraph](https://langchain-ai.github.io/langgraphjs/) agent reads them, infers a relational schema (tables, columns, types, and foreign keys), writes the SQL, validates and self-corrects it, then executes it against Postgres — while the frontend streams every step as a live 2D/3D knowledge graph.
 
-> 🏆 Built for a **Supabase Hackathon**, where it was a winning entry.
+> 🏆 Built for a 48 hr **Supabase Hackathon**, where it was a winning entry.
 
 ---
 
